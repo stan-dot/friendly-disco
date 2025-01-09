@@ -17,7 +17,7 @@ https://doc.arroyo.dev/tutorial/first-pipeline
 ## steps
 
 on windows:
-`run -it --network=host -p 1883:1883 -v /mosquitto/data -v /mosquitto/log docker.io/eclipse-mosquitto`
+`podman run -it --network=host -p 1883:1883 -v /mosquitto/data -v /mosquitto/log docker.io/eclipse-mosquitto`
 
 on Linux: follow the instructions
 https://github.com/eclipse-mosquitto/mosquitto
