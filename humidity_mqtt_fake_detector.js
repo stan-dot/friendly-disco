@@ -23,7 +23,7 @@ function publishHumidity() {
     currentHumidity = Math.max(minHumidity, Math.min(maxHumidity, currentHumidity + step));
     
     const payload = {
-        humidity: currentHumidity.toFixed(2),
+        humidityValue: currentHumidity,
         timestamp: new Date().toISOString()
     };
 

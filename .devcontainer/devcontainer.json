@@ -11,7 +11,8 @@
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   "forwardPorts": [
     5115, // for arroyo
-   8080//for roapi
+   8080, //for roapi
+   8084
 
 ],
   // // Uncomment the next line to run commands after the container is created.
@@ -60,5 +61,5 @@
   "updateRemoteUserUID": false,
   // for rootless we are root inside the container
   "remoteUser": "root",
-  // "postStartCommand": "pnpm i"
+  "postStartCommand": "curl -LsSf https://arroyo.dev/install.sh | sh "
 }

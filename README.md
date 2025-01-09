@@ -19,8 +19,17 @@ https://doc.arroyo.dev/tutorial/first-pipeline
 on windows:
 `run -it --network=host -p 1883:1883 -v /mosquitto/data -v /mosquitto/log docker.io/eclipse-mosquitto`
 
+on Linux: follow the instructions
+https://github.com/eclipse-mosquitto/mosquitto
+
+
+arroyo - should be installed with devcontainer post-create command
+http://localhost:5115/
+
+
 1. run the script
 2. open the browsers
+3. define a humidity connection in the arroyo UI
 
 
 ## Debugging

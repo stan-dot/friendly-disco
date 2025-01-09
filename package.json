@@ -1,5 +1,13 @@
 {
   "dependencies": {
+    "axios": "^1.7.9",
+    "chai": "^5.1.2",
+    "mocha": "^11.0.1",
     "mqtt": "^5.10.3"
+  },
+  "scripts": {
+    "test": "npx mocha test.js",
+    "prerequites":"arroyo cluster && pip install roapi &&  roapi -c roapi-config.yaml",
+    "sensors": "node humidity_mqtt_fake_detector.js & node temperature_mqtt_fake_detector.js"
   }
 }

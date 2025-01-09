@@ -4,7 +4,7 @@ const mqtt = require('mqtt');
 const brokerUrl = 'mqtt://localhost'; // Change to your broker's URL if needed
 
 // MQTT topic for temperature measurements
-const topic = 'sensor/temperature';
+const topic = 'sensors/temperature';
 
 // Connect to the MQTT broker
 const client = mqtt.connect(brokerUrl);
