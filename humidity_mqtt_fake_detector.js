@@ -1,6 +1,7 @@
 const mqtt = require('mqtt');
 
 // MQTT broker URL
+// const brokerUrl = 'mqtt://host.docker.internal:1883'; // Update this with your broker address
 const brokerUrl = 'mqtt://localhost:1883'; // Update this with your broker address
 
 // Create an MQTT client
