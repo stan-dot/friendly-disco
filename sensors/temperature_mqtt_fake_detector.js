@@ -26,7 +26,7 @@ client.on('connect', () => {
 
     setInterval(() => {
         temperature = randomWalk(temperature);
-        const payload = JSON.stringify({ temperature: temperature.toFixed(2), timestamp: Date.now() });
+        const payload = JSON.stringify({ temperature_value: temperature, timestamp: Date.now() });
         client.publish(topic, payload, { qos: 0 }, (err) => {
             if (err) {
                 console.error('Failed to publish temperature:', err);

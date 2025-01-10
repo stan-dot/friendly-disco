@@ -1,7 +1,7 @@
 
 CREATE TABLE archived_humidity (
 
-  humidityValue float,
+  humidity_value float,
 
   datetime timestamp
 
@@ -11,7 +11,8 @@ CREATE TABLE archived_humidity (
 
   type = 'sink',
 
-  path = 'file:///tmp/parquet_write',
+  path = 'file:///tmp/parquet_write/humidity', 
+  -- could also be inside an S3 bucket
 
   format = 'parquet',
 
@@ -26,14 +27,13 @@ CREATE TABLE archived_humidity (
 );
 
 
-
 INSERT INTO archived_humidity
 
-SELECT av as humidityValue, window.end  as datetime
+SELECT av as humidity_value, window.end  as datetime
 
 FROM (
 
-  SELECT avg(humidity."humidityValue") as av, hop(interval '2 seconds', interval '10 seconds') as window
+  SELECT avg(humidity.humidity_value) as av, hop(interval '2 seconds', interval '10 seconds') as window
 
   FROM humidity
 

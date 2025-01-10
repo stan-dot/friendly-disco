@@ -1,5 +1,10 @@
 # friendly-disco
 
+pqrs to preview the files to verify
+merge the roapi two different tables into one to avoid collision
+maybe later a react page too quickly with vite https://recharts.org/en-US/examples
+
+
 ## prerequisites
 
 MQTT broker running (will work if ran as a containerized service)

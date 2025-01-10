@@ -10,11 +10,12 @@
   // "features": {},
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   "forwardPorts": [
-    5514, 5115, 5516, // for arroyo
-   8080, //for roapi
-   8084
-
-],
+    5514,
+    5115,
+    5516, // for arroyo
+    8080, //for roapi
+    8084
+  ],
   // // Uncomment the next line to run commands after the container is created.
   // // "postCreateCommand": "cat /etc/os-release",
   "features": {
@@ -57,5 +58,5 @@
   "updateRemoteUserUID": false,
   // for rootless we are root inside the container
   "remoteUser": "root",
-  "postStartCommand": "curl -LsSf https://arroyo.dev/install.sh | sh "
+  "postStartCommand": "curl -LsSf https://arroyo.dev/install.sh | sh  && curl https://sh.rustup.rs -sSf | sh && cargo install pqrs"
 }

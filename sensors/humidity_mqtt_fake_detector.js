@@ -23,7 +23,7 @@ function publishHumidity() {
     currentHumidity = Math.max(minHumidity, Math.min(maxHumidity, currentHumidity + step));
 
     const payload = {
-        humidityValue: currentHumidity,
+        humidity_value: currentHumidity, // note the snake case is important for arroyo processing
         timestamp: new Date().toISOString()
     };
 

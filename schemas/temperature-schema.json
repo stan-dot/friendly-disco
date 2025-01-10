@@ -2,10 +2,10 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
-    "temperature": {
-      "type": "string",
-      "pattern": "^\\d+(\\.\\d+)?$",
-      "description": "temperature as a string representing units of Celcius"
+    "temperature_value": {
+      "type": "number",
+      "format": "float",
+      "description": "temperature as a decimal number"
     },
     "timestamp": {
       "type": "string",

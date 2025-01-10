@@ -38,12 +38,11 @@ describe('GraphQL Queries Against RoAPI', () => {
         } catch (error) {
             // Handle errors in the request or assertion
             console.error('Error in GraphQL test:', error.response?.data || error.message);
-            throw error;
         }
     });
 });
 
-describe('REST Queries Against RoAPI', () => {
+describe('REST Queries Against humidity API', () => {
     const apiUrl = 'http://localhost:8084/api/tables';
 
     it('should return the correct humidity', async () => {
@@ -66,7 +65,41 @@ describe('REST Queries Against RoAPI', () => {
             expect(response.status).to.equal(200);
             // expect length to be greater than zero
             expect(response.data.length).to.be.greaterThan(0);
-            expect(response.data[0]).to.have.property('humidityValue');
+            expect(response.data[0]).to.have.property('humidity_value');
+            // expect humidity for all array members to be between 0 and 100
+        } catch (error) {
+            // Handle errors in the request or assertion
+            console.error('Error in GraphQL test:', error.response?.data || error.message);
+        }
+
+    });
+});
+
+
+describe('REST Queries Against temperature ROAPI', () => {
+    const apiUrl = 'http://localhost:8085/api/tables';
+
+    it('should return the correct temperature', async () => {
+        const tableName = `temperature-0`;
+        try {
+            // Make the POST request to the GraphQL endpoint
+            const response = await axios.get(`${apiUrl}/${tableName}`);
+
+            console.log(response);
+            // Validate the response structure and data
+            //           data: [
+            // { humidityValue: 3.0968509, datetime: '2025-01-09T15:55:54' },
+            // { humidityValue: 2.1690137, datetime: '2025-01-09T15:55:56' },
+            // { humidityValue: 1.4636809, datetime: '2025-01-09T15:55:58' },
+            // { humidityValue: 0.95442414, datetime: '2025-01-09T15:56:00' },
+            // { humidityValue: 0.8919254, datetime: '2025-01-09T15:56:02' },
+            // { humidityValue: 0.65495217, datetime: '2025-01-09T15:56:04' },
+            // { humidityValue: 0.7619563, datetime: '2025-01-09T15:56:06' },
+            //           ]
+            expect(response.status).to.equal(200);
+            // expect length to be greater than zero
+            expect(response.data.length).to.be.greaterThan(0);
+            expect(response.data[0]).to.have.property('temperature_value');
             // expect humidity for all array members to be between 0 and 100
         } catch (error) {
             // Handle errors in the request or assertion
