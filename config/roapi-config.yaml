@@ -8,5 +8,6 @@ tables:
   - name: "humidity-0"
     # uri: "/tmp/parquet_write/2025/01/09/15/00000-000.parquet"
     uri: "/tmp/parquet_write/2025/01/09/15" # this is for datasets broken up into many files
+    # todo change to use the date (current) or when the file was created
     option:
       format: "parquet"

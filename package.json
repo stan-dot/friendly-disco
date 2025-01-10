@@ -9,7 +9,7 @@
   "scripts": {
     "test": "npx mocha  tests/test.js",
     "arroyo": "arroyo -c config/arroyo.toml cluster",
-    "roapi": "pip install roapi &&  roapi -c roapi-config.yaml",
+    "roapi": "pip install roapi &&  roapi -c config/roapi-config.yaml",
     "pre": "npm run arroyo & npm run roapi",
     "sensors": "node sensors/humidity_mqtt_fake_detector.js & node sensors/temperature_mqtt_fake_detector.js",
     "all": "npm run pre & npm run sensors & npm run test"
