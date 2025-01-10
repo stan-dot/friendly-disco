@@ -39,4 +39,27 @@ devcontainer - need network setup right
 https://community.home-assistant.io/t/developing-in-devcontainer-how-to-access-local-network-of-host/271935/9
     
 and missing pip
+    apt-get update 
     apt install python3.11-venv
+    make venv 
+    activate venv
+    pip is there
+
+
+arroyo cluster may fail if the port 5114 is taken
+
+# overview
+# define the two topics
+# start mqtt broker with the two topics
+# start arroyo sink and source
+# write from mqtt into parquet
+# start the node services, run for a minute or two
+node humidity_mqtt_fake_detector.js
+node temperature_mqtt_fake_detector.js
+# stop the services
+# serve parquet result over roapi
+
+# verify with curl that the api works
+
+# stop the services: broker, arroyo
+

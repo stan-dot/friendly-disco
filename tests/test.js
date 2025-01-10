@@ -1,5 +1,5 @@
-const axios = require('axios');
-const { expect } = require('chai');
+import { expect } from 'chai';
+import axios from 'axios';
 
 describe('GraphQL Queries Against RoAPI', () => {
     const apiUrl = 'http://localhost:8084/api/graphql';
@@ -48,7 +48,6 @@ describe('REST Queries Against RoAPI', () => {
 
     it('should return the correct humidity', async () => {
         const tableName = `humidity-0`;
-
         try {
             // Make the POST request to the GraphQL endpoint
             const response = await axios.get(`${apiUrl}/${tableName}`);
@@ -74,5 +73,6 @@ describe('REST Queries Against RoAPI', () => {
             console.error('Error in GraphQL test:', error.response?.data || error.message);
             throw error;
         }
+
     });
 });

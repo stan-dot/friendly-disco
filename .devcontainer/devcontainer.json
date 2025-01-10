@@ -10,7 +10,7 @@
   // "features": {},
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   "forwardPorts": [
-    5115, // for arroyo
+    5514, 5115, 5516, // for arroyo
    8080, //for roapi
    8084
 
@@ -40,17 +40,13 @@
     "vscode": {
       // Add the IDs of extensions you want installed when the container is created.
       "extensions": [
-        "bierner.markdown-mermaid",
         "christian-kohler.path-intellisense",
         "eamodio.gitlens",
         "espenp.prettier-vscode",
         "foxundermoon.shell-format",
-        "hediet.vscode-drawio",
         "rvest.vs-code-prettier-eslint",
-        "rodrigovallades.es7-react-js",
-        "Vercel.turbo-vsc",
         "kamikillerto.vscode-colorize",
-        "vitest.explorer"
+        "tamasfe.even-better-toml"
       ]
     }
   },

@@ -1,0 +1,10 @@
+# checkpoint-url = 's3://my-bucket/checkpoints'
+
+# [controller]
+# scheduler = 'node'
+
+# [database]
+# type = "postgres"
+
+[api]
+http-port = 5114
