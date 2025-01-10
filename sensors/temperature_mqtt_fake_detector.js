@@ -1,4 +1,4 @@
-const mqtt = require('mqtt');
+import { connect } from 'mqtt';
 
 // MQTT broker URL
 const brokerUrl = 'mqtt://localhost'; // Change to your broker's URL if needed
@@ -7,7 +7,7 @@ const brokerUrl = 'mqtt://localhost'; // Change to your broker's URL if needed
 const topic = 'sensors/temperature';
 
 // Connect to the MQTT broker
-const client = mqtt.connect(brokerUrl);
+const client = connect(brokerUrl);
 
 // Initial temperature
 let temperature = 20 + Math.random() * 5; // Starting temperature between 20 and 25
