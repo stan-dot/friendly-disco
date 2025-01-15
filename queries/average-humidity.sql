@@ -1,4 +1,4 @@
-SELECT avg(humidity."humidityValue") as avg_humidity
+SELECT avg(humidity.humidity_value) as avg_humidity
 
 FROM humidity
 

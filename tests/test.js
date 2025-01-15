@@ -1,8 +1,11 @@
-import { expect } from 'chai';
+import { assert, expect } from 'chai';
 import axios from 'axios';
 
+
+const baseUrl = 'http://localhost:8084';
+
 describe('GraphQL Queries Against RoAPI', () => {
-    const apiUrl = 'http://localhost:8084/api/graphql';
+    const apiUrl = `${baseUrl}/api/graphql`;
 
     it('should return the correct humidity', async () => {
         const query = `humidity_0(
@@ -38,12 +41,13 @@ describe('GraphQL Queries Against RoAPI', () => {
         } catch (error) {
             // Handle errors in the request or assertion
             console.error('Error in GraphQL test:', error.response?.data || error.message);
+            assert.fail(error.response?.data || error.message);
         }
     });
 });
 
 describe('REST Queries Against humidity API', () => {
-    const apiUrl = 'http://localhost:8084/api/tables';
+    const apiUrl = `${baseUrl}/api/tables`;
 
     it('should return the correct humidity', async () => {
         const tableName = `humidity-0`;
@@ -70,6 +74,7 @@ describe('REST Queries Against humidity API', () => {
         } catch (error) {
             // Handle errors in the request or assertion
             console.error('Error in GraphQL test:', error.response?.data || error.message);
+            assert.fail(error.response?.data || error.message);
         }
 
     });
@@ -77,7 +82,7 @@ describe('REST Queries Against humidity API', () => {
 
 
 describe('REST Queries Against temperature ROAPI', () => {
-    const apiUrl = 'http://localhost:8085/api/tables';
+    const apiUrl = `${baseUrl}/api/tables`;
 
     it('should return the correct temperature', async () => {
         const tableName = `temperature-0`;
@@ -104,7 +109,7 @@ describe('REST Queries Against temperature ROAPI', () => {
         } catch (error) {
             // Handle errors in the request or assertion
             console.error('Error in GraphQL test:', error.response?.data || error.message);
-            throw error;
+            assert.fail(error.response?.data || error.message);
         }
 
     });

@@ -20,6 +20,7 @@ We'll go step by step in different terminal. We'll use a number of terminals tha
 - M for MQTT broker
 - S for fake sensors 
 - A for Arroyo
+- I for inspection of Parquet files with PQRS
 - R for Roapi
 - T for testing
 
@@ -87,7 +88,15 @@ https://doc.arroyo.dev/tutorial/first-pipeline
 ## Step 4 - Connect arroyo to mosquitto
 
 Follow the instructions in the arroyo UI to add a new connection of the 'mqtt' type. 
-You won't be asked to provide a specific topic for the connection yet. Add the details of the local mosquitto container, most likely with port 1883. 
+You won't be asked to provide a specific topic for the connection yet. 
+
+There we add the details of the local mosquitto container, most likely with port 1883. 
+
+Give it a name like `broker`, and you can skip all the fields but the url (which has a star). Put there `mqtt://127.0.0.1:1883` 
+
+Press validate, get a green notification and go on to 'create' the connection.
+
+The next screen will be configuring a specific topic as a table. For that we need the next step.
 
 
 ## Step 5 - Average Humidity query - terminal S (for sensors)
@@ -110,22 +119,46 @@ Published to sensors/humidity: {
 
 If you see 'mqtt broker connection failed` then check if the mosquitto broker is running and at the correct port.
 
-Next, open `queries/average-humidity.sql` and add it as a new query in the arroyo UI.
-When you run it you should see a series of averaged rows.
+In the arroyo UI let's add a new source for MQTT messages.
+First we need to define the stream of messages for `humidity` and save it as a table.
+Let's go back to Arroyo UI, where we left at 'create mqtt connection'.
+Our `topic` can be gleaned from the `sensors/humidity_mqtt_fake_detector.js`
+which is 'sensors/humidity'. We keep the table type source.
+The next screen, step 3 in my interface (your may wary), will have the 'data format' field.
+Choose the options JSON and a field for `schema type` will appear.
+There choose `JSON schema`. Then a text input field will appear. There add json schema from `schemas/humidity-schema.json`.
+Press `validate` to proceed.
+
+Give the connection the table name `humidity` to match our later SQL.
+
+
+Next, open `queries/average-humidity.sql`.
+
+In the arroyo UI, open `pipelines` and press `add new pipeline` to add a new query.
+There paste the contents of the sql file.
+
+Press preview to see a growing table of averages.
+Then press launch to deploy it locally, give it a simple name like 'average humidity test'.
+Well done processing from nodejs to mqtt broker to arroyo to the web interface! Let's go further.
 
 ## Step 6 - Saving humidity data to filesystem
-
-First we need to define the `humidity` topic and save it as a table.
-In the arroyo UI add a new source for MQTT messages.
-Choose the options JSON and add json schema from `schemas/humidity-schema.json`.
-<!-- todo need to check if this is all good -->
 
 Let's save this data to the filesystem in parquet format.
 The query in `queries/save-humidity.sql` defines a new sink - without needing any action in arroyo UI and writes averages to it.
 
-## Step 7 - (optional) Inspecting the parquet file
+This time when you press 'preview' make sure to tick the box for 'enable sinks' to actually get your files into the filesystem.
+
+## Step 7 - (optional) Inspecting the parquet file - terminal I (for inspect)
+
+We can now go into the location that we write the data - you can find it in the `queries/save-humidity.sql` file, line 14, but inside we'll see a nested folder structure and binary files. 
+`path = 'file:///tmp/parquet_write/humidity'` 
+Your file will be somewhere inside that folder, as we used 
+`time_partition_pattern = '%Y/%m/%d/%H'` folder path will depend on the time you run the system.
+As they have a binary format, to preview parquet files we'll need something more powerful than 'cat' and 'ls'.
+NOTE: files will be in the temporary `__in_progress` folder until one file worth of data fills up. this can take a minute or two.
 
 We'll use `pqrs` a tool made in Rust 🦀 for inspecting parquet files.
+If the devcontainer setup went smoothly you should have it in your path.
 https://github.com/manojkarthick/pqrs
 You can download it as a ready binary.
 
@@ -133,11 +166,10 @@ To install it we'll use `cargo`, the rust package manager. It's quite easy to se
 Devcontainer should have it already - 
 https://doc.rust-lang.org/cargo/getting-started/installation.html
 
+To install pqrs just run `cargo install pqrs`.
+
 Regardless of your method of installation.
-Run `pqrs` to see if anything comes up, and then run `pqrs filepath` where the file path will be from the SQL script, `queries/save-humidity.sql`:
-`path = 'file:///tmp/parquet_write/humidity'` 
-Your file will be somewhere inside that folder, as we used 
-`time_partition_pattern = '%Y/%m/%d/%H'` folder path will depend on the time you run the system.
+Run `pqrs` to see if anything comes up, and then run `pqrs cat filename`.
 
 Inspect one of the parquet files with pqrs to see if the averages inside look similar to the ones you saw as output in the arroyo UI.
 
@@ -173,7 +205,8 @@ Your mileage may vary depending on your Python version.
 
 ## Step 9 - serve the static parquet files - still in terminal R
 
-At this point `npm run roapi:humidity` should succeed in starting the server.
+Set the path in the correct roapi config yaml to be your data path with the right date and time.
+After that `npm run roapi:humidity` should succeed in starting the server.
 
 ## Step 10 - (optional) Follow the steps 5, 6, 7, 9 but for `temperature` to get a more complex and realistic dataset
 
@@ -185,6 +218,7 @@ Note: for step 9 you'd want to use `config/roapi-joint-config.yaml` to serve bot
 
 Run `npm run test` to run the nodejs test suite.
 Note: if you skipped step 10 expect only 2 out of three tests to work.
+Note: You may need to adjust the endpoint URL depending on your roapi config
 
 You may also verify that the API works manually and test your own queries with a tool like postman or curl.
 See the roapi instructions on the topic. 
