@@ -16,38 +16,38 @@ Optional:
 
 Now, let's start by setting up the backbone of our system: the MQTT broker. This will act as the central hub for collecting and routing messages from IoT devices. Open a terminal and follow the steps below to get it running.
 
-We'll go step by step in different terminal. We'll use a number of terminals that are letter-coded:
-- M for MQTT broker
-- S for fake sensors 
-- A for Arroyo
-- I for inspection of Parquet files with PQRS
-- R for Roapi
-- T for testing
+This guide walks you step-by-step through a technical proof of concept. We'll use multiple terminals to manage the workflow. For clarity, each terminal is letter-coded based on its purpose:
+
+- M: MQTT broker
+- S: Fake sensors
+- A: Arroyo
+- I: Parquet file inspection (PQRS)
+- R: Roapi
+- T: Testing
 
 
-## Step 1 - Open devcontainer
+## Step 1 - Open the Devcontainer
 
-This will provide the best experience. You may also do this on a simple linux machine, you'll need to install some dependencies manually however.
+To ensure the best experience, use the provided devcontainer setup. While it's possible to follow these steps on a basic Linux machine, you will need to install certain dependencies manually.
 
-## Step 2 - terminal M (for MQTT) - start mqtt broker
+## Step 2: Start the MQTT Broker (Terminal M)
 
-Get the mosquitto data broker running.
+In Terminal M, start the MQTT broker. This can be done using Eclipse Mosquitto.
 
-MQTT broker running (will work if ran as a containerized service)
-https://hub.docker.com/_/eclipse-mosquitto
+For Windows/Linux with installed podman:
 
-on windows:
-`podman run -it --network=host -p 1883:1883 -v /mosquitto/data -v /mosquitto/log docker.io/eclipse-mosquitto`
+```podman run -it --network=host -p 1883:1883 -v /mosquitto/data -v /mosquitto/log docker.io/eclipse-mosquitto```
 
-on Linux: follow the instructions
-https://github.com/eclipse-mosquitto/mosquitto
+## Step 3: Start Arroyo (Terminal A)
 
+Switch to Terminal A. Verify that Arroyo is installed by running:
 
-## Step 2 - terminal A (for arroyo) - start arroyo
+```arroyo --help```
 
-In your devcontainer, check if `arroyo --help` returns something like:
+You should see output similar to the following:
 
-```Usage: arroyo [OPTIONS] <COMMAND>
+```
+Usage: arroyo [OPTIONS] <COMMAND>
 
 Commands:
   run         Run a query as a local pipeline cluster
@@ -68,22 +68,22 @@ Options:
   -V, --version                  Print version
 ```
 
-The above is my output with version `arroyo 0.13.1`.
-run `npm run arroyo` to start the cluster.
+Next, start the Arroyo cluster by running:
 
-If arroyo complains that the port is taken, you may need to adjust your arroyo configuration port in `config/arroyo.toml` to be, say `5114`.
-If everything went ok you can proceed to the next point.
+```npm run arroyo```
 
-## Step 3 - browser arroyo UI first steps
+    Note: If Arroyo reports a port conflict, update the config/arroyo.toml file to set a new port, such as 5114.
 
-Once you get arroyo running, you should see info where is the admin panel. 
-For me with devcontainer it's at.
+Once Arroyo is running successfully, proceed to the next step.
 
-http://localhost:5115/
+## Step 4: Access the Arroyo Admin Panel
+
+Open a browser and navigate to the Arroyo admin panel. By default, the URL is:
+http://localhost:5112/
 
 
-Here take a look at the 'first pipeline' docs if it's your first time using arroyo.
-https://doc.arroyo.dev/tutorial/first-pipeline
+If this is your first time using Arroyo, consult the [First Pipeline documentation](https://doc.arroyo.dev/tutorial/first-pipeline) for guidance.
+
 
 ## Step 4 - Connect arroyo to mosquitto
 
