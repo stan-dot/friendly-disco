@@ -7,11 +7,11 @@
     "mqtt": "^5.10.3"
   },
   "scripts": {
-    "test": "npx mocha  tests/test.js",
+    "test": "npx mocha tests/test.js",
     "arroyo": "arroyo -c config/arroyo.toml cluster",
-    "roapi": "pip install roapi &&  roapi -c config/roapi-config.yaml",
-    "pre": "npm run arroyo & npm run roapi",
-    "sensors": "node sensors/humidity_mqtt_fake_detector.js & node sensors/temperature_mqtt_fake_detector.js",
-    "all": "npm run pre & npm run sensors & npm run test"
+    "roapi:humidity": "roapi -c config/roapi-humidity-config.yaml",
+    "roapi:joint": "roapi -c config/roapi-joint-config.yaml",
+    "humidity": "node sensors/humidity_mqtt_fake_detector.js",
+    "temperature": "node sensors/temperature_mqtt_fake_detector.js"
   }
 }

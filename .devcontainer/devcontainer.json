@@ -26,7 +26,7 @@
   },
   // "initializeCommand": "bash -c 'for i in $HOME/.inputrc; do [ -f $i ] || touch $i; done'",
   "runArgs": [
-    "--network=host",
+    "--network=host", // note: this is required for the container to access the host's network for Podman https://community.home-assistant.io/t/developing-in-devcontainer-how-to-access-local-network-of-host/271935/2
     "--security-opt=label=disable",
     // Mount the user sockets folder
     "-v${localEnv:XDG_RUNTIME_DIR}:${localEnv:XDG_RUNTIME_DIR}",

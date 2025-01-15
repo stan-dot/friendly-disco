@@ -1,0 +1,202 @@
+# Streaming, Persistence, and Inspection: Building a Data Pipeline for IoT Devices
+
+The ever-growing ecosystem of IoT devices generates vast streams of data that require robust handling for real-time insights and long-term storage. Whether you're monitoring environmental sensors, tracking industrial equipment, or analyzing smart home devices, managing the flow, persistence, and inspection of IoT data is a common challenge. In this post, I’ll walk you through a proof-of-concept system designed to showcase a practical approach to streaming, storing, and visualizing IoT data.
+
+This guide will demonstrate how to set up an MQTT broker for handling data streams from IoT devices, persist that data for later analysis, and inspect it through interactive tools. We'll take a modular approach, ensuring you can follow along and adapt the system to your own needs.
+Prerequisites
+
+Before we dive in, ensure you have the following installed on your system:
+
+- Docker / Podman: For containerized services.
+- Devcontainer
+
+Optional: 
+- MQTT Client: Such as mosquitto_pub or paho-mqtt for testing the broker.
+- A JSON Viewer: Optional but helpful for inspecting payloads.
+
+Now, let's start by setting up the backbone of our system: the MQTT broker. This will act as the central hub for collecting and routing messages from IoT devices. Open a terminal and follow the steps below to get it running.
+
+We'll go step by step in different terminal. We'll use a number of terminals that are letter-coded:
+- M for MQTT broker
+- S for fake sensors 
+- A for Arroyo
+- R for Roapi
+- T for testing
+
+
+## Step 1 - Open devcontainer
+
+This will provide the best experience. You may also do this on a simple linux machine, you'll need to install some dependencies manually however.
+
+## Step 2 - terminal M (for MQTT) - start mqtt broker
+
+Get the mosquitto data broker running.
+
+MQTT broker running (will work if ran as a containerized service)
+https://hub.docker.com/_/eclipse-mosquitto
+
+on windows:
+`podman run -it --network=host -p 1883:1883 -v /mosquitto/data -v /mosquitto/log docker.io/eclipse-mosquitto`
+
+on Linux: follow the instructions
+https://github.com/eclipse-mosquitto/mosquitto
+
+
+## Step 2 - terminal A (for arroyo) - start arroyo
+
+In your devcontainer, check if `arroyo --help` returns something like:
+
+```Usage: arroyo [OPTIONS] <COMMAND>
+
+Commands:
+  run         Run a query as a local pipeline cluster
+  api         Starts an Arroyo API server
+  controller  Starts an Arroyo Controller
+  cluster     Starts a complete Arroyo cluster
+  worker      Starts an Arroyo worker
+  compiler    Starts an Arroyo compiler server
+  node        Starts an Arroyo node server
+  migrate     Runs database migrations on the configured Postgres database
+  visualize   Visualizes a query plan
+  help        Print this message or the help of the given subcommand(s)
+
+Options:
+  -c, --config <CONFIG>          Path to an Arroyo config file, in TOML or YAML format
+      --config-dir <CONFIG_DIR>  Directory in which to look for configuration files
+  -h, --help                     Print help
+  -V, --version                  Print version
+```
+
+The above is my output with version `arroyo 0.13.1`.
+run `npm run arroyo` to start the cluster.
+
+If arroyo complains that the port is taken, you may need to adjust your arroyo configuration port in `config/arroyo.toml` to be, say `5114`.
+If everything went ok you can proceed to the next point.
+
+## Step 3 - browser arroyo UI first steps
+
+Once you get arroyo running, you should see info where is the admin panel. 
+For me with devcontainer it's at.
+
+http://localhost:5115/
+
+
+Here take a look at the 'first pipeline' docs if it's your first time using arroyo.
+https://doc.arroyo.dev/tutorial/first-pipeline
+
+## Step 4 - Connect arroyo to mosquitto
+
+Follow the instructions in the arroyo UI to add a new connection of the 'mqtt' type. 
+You won't be asked to provide a specific topic for the connection yet. Add the details of the local mosquitto container, most likely with port 1883. 
+
+
+## Step 5 - Average Humidity query - terminal S (for sensors)
+
+In a new terminal, run 
+`npm run humidity`
+You should see output similar to this:
+
+```
+Connected to MQTT broker
+Published to sensors/humidity: {
+  humidity_value: 51.519280749999005,
+  timestamp: '2025-01-15T17:05:18.324Z'
+}
+Published to sensors/humidity: {
+  humidity_value: 52.97255972800715,
+  timestamp: '2025-01-15T17:05:19.325Z'
+}
+```
+
+If you see 'mqtt broker connection failed` then check if the mosquitto broker is running and at the correct port.
+
+Next, open `queries/average-humidity.sql` and add it as a new query in the arroyo UI.
+When you run it you should see a series of averaged rows.
+
+## Step 6 - Saving humidity data to filesystem
+
+First we need to define the `humidity` topic and save it as a table.
+In the arroyo UI add a new source for MQTT messages.
+Choose the options JSON and add json schema from `schemas/humidity-schema.json`.
+<!-- todo need to check if this is all good -->
+
+Let's save this data to the filesystem in parquet format.
+The query in `queries/save-humidity.sql` defines a new sink - without needing any action in arroyo UI and writes averages to it.
+
+## Step 7 - (optional) Inspecting the parquet file
+
+We'll use `pqrs` a tool made in Rust 🦀 for inspecting parquet files.
+https://github.com/manojkarthick/pqrs
+You can download it as a ready binary.
+
+To install it we'll use `cargo`, the rust package manager. It's quite easy to set up.
+Devcontainer should have it already - 
+https://doc.rust-lang.org/cargo/getting-started/installation.html
+
+Regardless of your method of installation.
+Run `pqrs` to see if anything comes up, and then run `pqrs filepath` where the file path will be from the SQL script, `queries/save-humidity.sql`:
+`path = 'file:///tmp/parquet_write/humidity'` 
+Your file will be somewhere inside that folder, as we used 
+`time_partition_pattern = '%Y/%m/%d/%H'` folder path will depend on the time you run the system.
+
+Inspect one of the parquet files with pqrs to see if the averages inside look similar to the ones you saw as output in the arroyo UI.
+
+If yes, this means that the sink works! Well done :\)
+
+The files are safely recorded and won't change - their writing was time-specific - this means they are static.
+Let's see how easily we can serve static files as an API with roapi.
+
+## Step 8 - roapi installation  - terminal R (for roapi)
+
+Roapi recommended installation is with pip.
+For this devcontainer you might need to adjust your python installation and CLI to include pip correctly.
+https://roapi.github.io/docs/quickstart.html
+we choose to run with pip
+https://stackoverflow.com/questions/6587507/how-to-install-pip-with-python-3
+
+I had to run those steps with a Python3.11 installation:
+
+```
+apt-get update -y
+apt install python3.11-venv
+python -m venv .venv
+source .venv/bin/activate
+which pip
+```
+In order for this command to succeed:
+```
+pip install roapi
+```
+
+Your mileage may vary depending on your Python version.
+
+
+## Step 9 - serve the static parquet files - still in terminal R
+
+At this point `npm run roapi:humidity` should succeed in starting the server.
+
+## Step 10 - (optional) Follow the steps 5, 6, 7, 9 but for `temperature` to get a more complex and realistic dataset
+
+This optional step is left as an exercise to the reader.
+
+Note: for step 9 you'd want to use `config/roapi-joint-config.yaml` to serve both tables at the same time.
+
+## Step 11 - Validate with the test - terminal T (for testing)
+
+Run `npm run test` to run the nodejs test suite.
+Note: if you skipped step 10 expect only 2 out of three tests to work.
+
+You may also verify that the API works manually and test your own queries with a tool like postman or curl.
+See the roapi instructions on the topic. 
+https://roapi.github.io/docs/api/schema.html
+
+## Step 12 - Close the terminals
+
+Use `Ctrl+C` to close all the running processes in each terminal.
+
+## Step 13 - taking it beyond the tutorial
+
+You may want to make a front end showing both the historical data and ongoing processes. For instance mapping the graph of temperature against hour of day for two days: today and a month ago.
+Maybe later a react page too quickly with vite https://recharts.org/en-US/examples
+Let me know if you make it!
+

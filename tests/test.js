@@ -88,13 +88,13 @@ describe('REST Queries Against temperature ROAPI', () => {
             console.log(response);
             // Validate the response structure and data
             //           data: [
-            // { humidityValue: 3.0968509, datetime: '2025-01-09T15:55:54' },
-            // { humidityValue: 2.1690137, datetime: '2025-01-09T15:55:56' },
-            // { humidityValue: 1.4636809, datetime: '2025-01-09T15:55:58' },
-            // { humidityValue: 0.95442414, datetime: '2025-01-09T15:56:00' },
-            // { humidityValue: 0.8919254, datetime: '2025-01-09T15:56:02' },
-            // { humidityValue: 0.65495217, datetime: '2025-01-09T15:56:04' },
-            // { humidityValue: 0.7619563, datetime: '2025-01-09T15:56:06' },
+            // { temperatureValue: 30.2, datetime: '2025-01-09T15:55:54' },
+            // { temperatureValue: 30.3, datetime: '2025-01-09T15:55:56' },
+            // { temperatureValue: 30.4, datetime: '2025-01-09T15:55:58' },
+            // { temperatureValue: 30.0, datetime: '2025-01-09T15:56:00' },
+            // { temperatureValue: 30.7, datetime: '2025-01-09T15:56:02' },
+            // { temperatureValue: 30.0, datetime: '2025-01-09T15:56:04' },
+            // { temperatureValue: 30.9, datetime: '2025-01-09T15:56:06' },
             //           ]
             expect(response.status).to.equal(200);
             // expect length to be greater than zero
