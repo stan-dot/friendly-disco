@@ -217,4 +217,27 @@ https://roapi.github.io/docs/api/schema.html
 
 Consider extending this tutorial by creating a frontend that visualizes historical and real-time data. For example, you could create a graph showing temperature or humidity trends using a library like Recharts.
 
- 
+## Closing Notes
+
+Congratulations! 🎉 You've successfully navigated through the proof of concept, integrating MQTT, Arroyo, Parquet files, and Roapi into a functional pipeline. Here’s a quick recap of what you’ve accomplished:
+
+1. Set up a dev environment: Leveraged a devcontainer for ease of development.
+2. Simulated data streams: Published fake sensor data to an MQTT broker.
+3. Processed data: Used Arroyo to process, visualize, and save data to Parquet files.
+4. Exposed data as an API: Served the Parquet files via Roapi for external consumption.
+5. Tested the pipeline: Validated the system's functionality with test scripts.
+
+This tutorial demonstrated how to move data seamlessly from raw sensor streams to a queryable API, enabling deeper analysis and application development. While this example focused on humidity data, you can easily extend it to other use cases, such as temperature monitoring, IoT systems, or even real-time dashboards.
+Next Steps
+
+Here are some ideas for where you can go from here:
+
+1. Experiment with More Data: Extend the pipeline to handle more complex datasets or combine multiple sensors (e.g., temperature and humidity).
+2. Build a Visualization: Create a React or Vite frontend to display trends and insights from the processed data.
+3. Deploy in Production: Experiment with deploying the setup in a production environment, considering scalability and fault tolerance.
+
+We’d Love to Hear From You
+
+If you have any feedback, questions, or suggestions about this tutorial, feel free to reach out in github issues! You can also contribute improvements in a PR.
+
+Thank you for following along, and happy experimenting! 
