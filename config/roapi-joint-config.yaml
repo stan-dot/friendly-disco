@@ -1,17 +1,17 @@
 
 addr:
   # binding address for TCP port that speaks HTTP protocol
-  http: 0.0.0.0:8084
+  http: 0.0.0.0:8085
   # binding address for TCP port that speaks Postgres wire protocol
   postgres: 0.0.0.0:5432
 tables:
   - name: "temperature-0"
-    uri: "/tmp/parquet_write/temperature/2025/01/10/16" # this is for datasets broken up into many files
+    uri: "/tmp/parquet_write/temperature/2025/01/17/13" # this is for datasets broken up into many files
     # todo change to use the date (current) or when the file was created
     option:
       format: "parquet"
   - name: "humidity-0"
-    uri: "/tmp/parquet_write/humidity/2025/01/10/16" # this is for datasets broken up into many files
+    uri: "/tmp/parquet_write/humidity/2025/01/17/13" # this is for datasets broken up into many files
     # todo change to use the date (current) or when the file was created
     option:
       format: "parquet"
